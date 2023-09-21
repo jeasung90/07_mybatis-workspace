@@ -9,22 +9,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kh.mybatis.board.model.service.BoardService;
 import com.kh.mybatis.board.model.service.BoardServiceImpl;
 import com.kh.mybatis.board.model.vo.Board;
-import com.kh.mybatis.common.model.vo.PageInfo;
-import com.kh.mybatis.common.template.Pagenation;
+import com.kh.mybatis.board.model.vo.Reply;
 
 /**
- * Servlet implementation class BoardListController
+ * Servlet implementation class BoardDetailController
  */
-@WebServlet("/list.bo")
-public class BoardListController extends HttpServlet {
+@WebServlet("/detail.bo")
+public class BoardDetailController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BoardListController() {
+    public BoardDetailController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,23 +34,35 @@ public class BoardListController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		// -----------페이징 처리-------------
-		// 핵어려움 주의 + 원리를 파악하자 => 결국은 공식을 외우면됨
+		int boaredNo = Integer.parseInt(request.getParameter("bno"));
 		
-		int listCount = new BoardServiceImpl().selectListCount();
-		// 현재 총 게시글 개수
-		int currentPage = Integer.parseInt(request.getParameter("cpage"));
-		// 현재 페이지 (즉, 사용자가 요청한 페이지)
+		BoardServiceImpl bService = new BoardServiceImpl();
 		
-		PageInfo pi = Pagenation.getPageInfo(listCount, currentPage, 10, 5);
+		// 1. 조회수 증가시키는 서비스
+		int result = bService.increaseCount(boaredNo);
 		
-		ArrayList<Board> list = new BoardServiceImpl().selectList(pi);
+		if(result > 0 ) {
+			// 2. 해당 게시글 상세 조회 서비스
+			Board b = bService.selectBoard(boaredNo);
+			// 2_2. 댇글 담아옴
+			ArrayList<Reply> list = bService.selectReplyList(boaredNo);
+			
+			request.setAttribute("b", b);
+			request.setAttribute("list", list);
+			
+			request.getRequestDispatcher("WEB-INF/views/board/boardDetailView.jsp").forward(request, response);
+			
+			
+			// 3. 해당 게시글 딸린 댇글 리스트 조회 서비스
+		}else {
+			request.setAttribute("errorMsg", "상세조회 실패!");
+			request.getRequestDispatcher("WEB-INF/views/common/errorPage.jsp").forward(request, response);
+		}
 		
-		request.setAttribute("pi", pi);
-		request.setAttribute("list", list);
-		
-		request.getRequestDispatcher("WEB-INF/views/board/boardListView.jsp").forward(request, response);
-		
+	
+	
+	
+	
 	
 	}
 

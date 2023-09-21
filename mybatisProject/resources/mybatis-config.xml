@@ -14,6 +14,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
    <!-- typeAliases : VO/DTO 클래스들의 풀클래스명을 단순한 클래스명으로 사용하기 위해서 별칭을 등록할 수 있는 영역 -->
    <typeAliases>
       <typeAlias type="com.kh.mybatis.member.model.vo.Member" alias="Member"/>
+      <typeAlias type="com.kh.mybatis.board.model.vo.Board" alias="Board"/>
+      <typeAlias type="com.kh.mybatis.board.model.vo.Reply" alias="Reply"/>
    	 		<!-- type="원래경로" alias="부를 별칭" -->
    </typeAliases>
    

@@ -3,6 +3,112 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="boardMapper">
-  	
   
+  	<resultMap type="Board" id="boardResultSet">
+  		<result column="board_no" property="boardNo"/>
+  		<result column="BOARD_TITLE" property="boardTitle"/>
+  		<result column="user_id" property="boardWriter"/>
+  		<result column="count" property="count"/>
+  		<result column="CREATE_DATE" property="createDate"/>
+  		<result column="BOARD_CONTENT" property="boardContent"/>
+  	</resultMap>
+  	<resultMap type="Reply" id="replyResultSet">
+  		<result column="REPLY_NO" property="replyNo"/>
+  		<result column="USER_ID" property="replyWriter"/>
+  		<result column="reply_content" property="replyContent"/>
+  		<result column="create_date" property="createDate"/>
+  	</resultMap>
+  
+  	<select id="selectListCount" resultType="_int">
+  		select
+		        count(*)
+		 from board
+		 where status ='Y'
+  	</select>
+  	<select id="selectList" resultMap="boardResultSet">
+  	 select 
+	        board_no
+	     , BOARD_TITLE
+	     , user_id
+	     , count
+	     , CREATE_DATE
+	 from board b
+	 join member on (b.BOARD_WRITER = USER_NO)
+	 where b.status = 'Y'
+	 order 
+	 	by board_no desc
+ </select>
+ <update id="increaseCount" parameterType="_int">
+ 	update
+ 			board
+ 	   set count = count + 1
+     where board_no = #{boardNo}
+       and status = 'Y'
+ </update>
+ <select id="selectBoard" resultMap="boardResultSet" parameterType="_int">
+	 select
+	        BOARD_NO
+	      , BOARD_TITLE
+	      , USER_ID
+	      , b.count
+	      , CREATE_DATE
+	      , BOARD_CONTENT
+	   from board b
+	   join member on (b.BOARD_WRITER = USER_NO)
+	  where board_no = #{boardNo}
+ </select>
+  <select id="selectReplyList" resultMap="replyResultSet" parameterType="_int">
+  	select
+  		   REPLY_NO
+  		 , user_id
+  		 , reply_content
+  		 , create_date
+  	  from reply r
+  	  join member on (REPLY_WRITER = user_no)
+  	 where ref_bno = #{boardNo}
+  	   and r.status = 'Y'
+  	 order
+  	    by reply_no desc
+  </select>
+  <select id="selectSearchCount" resultType="_int">
+	  select
+	         count(*)
+	    from board b
+	    join member on (BOARD_WRITER = USER_NO)
+	   where b.status ='Y'
+	   <if test="condition == 'writer'"> 
+         and user_id like '%'||#{keyword}||'%' 
+	   </if>
+	   <if test="condition == 'title'"> 
+         and board_title like '%'||#{keyword}||'%' 
+	   </if>
+	   <if test="condition == 'content'"> 
+         and board_content like '%'||#{keyword}||'%' 
+	   </if>
+  </select>
+  <select id="selectSearchList" resultMap="boardResultSet">
+  	 select 
+		        board_no
+		     , BOARD_TITLE
+		     , user_id
+		     , count
+		     , CREATE_DATE
+		 from board b
+		 join member on (b.BOARD_WRITER = USER_NO)
+		 where b.status = 'Y'
+		 
+		 <choose>
+		 	<when test="condition == 'writer'">
+	         	and user_id like '%'||#{keyword}||'%' 
+         	</when>
+         	<when test="condition == 'title'">
+	         	and board_title like '%'||#{keyword}||'%' 
+	        </when>
+         	<otherwise>
+	          	and board_content like '%'||#{keyword}||'%' 
+	        </otherwise>
+	    </choose>
+		 order 
+		 	by board_no desc
+  </select>
   </mapper>

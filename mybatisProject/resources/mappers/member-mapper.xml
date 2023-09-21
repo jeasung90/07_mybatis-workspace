@@ -16,7 +16,7 @@
   		* SELECT문 일 경우
   		<select id="각sql문 식별자" [parameterType="전달받을 타입(풀클래스명)|별칭"] 
   							resultType="조회결과를 반환하고자 하는 자바타입" | resultMap="조회결과를 뽑아서 매핑할 resultMap">
-  				
+  							resultType="_int,_string...."
   				*별칭하려면 마이바티스-컨피크에서 <typeAlias type="com.kh.mybatis.member.model.vo.Member" alias="Member"/> 세팅해야함
   		
   		</select>
