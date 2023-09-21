@@ -4,9 +4,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>사실 김시연 팬클럽 싸이트임</title>
+<title>김시연 남자친구후보 연합회 에러페이지</title>
 </head>
 <body>
-	<jsp:include page="common/menubar.jsp"/>
+	<jsp:include page="../common/menubar.jsp"/>
+	<h1 align="center">${errorMsg }</h1>
+
 </body>
 </html>
