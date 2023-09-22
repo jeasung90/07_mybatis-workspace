@@ -111,4 +111,9 @@
 		 order 
 		 	by board_no desc
   </select>
+  <update id="deleteBoard"  parameterType="_int">
+  UPDATE board
+	   set status = 'N'
+	 where BOARD_NO = #{boardNo}
+  </update>
   </mapper>

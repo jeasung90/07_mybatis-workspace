@@ -41,6 +41,15 @@
             </tr>
             
         </table>
+
+        <div>
+            <a href="list.bo?cpage=1" class="btn btn-sm btn-secondary">목록가기</a>
+            <c:if test="${not empty loginMember and loginMember.userId eq b.boardWriter }">
+                <a class="btn btn-sm btn-warning">수정하기</a>
+                <a href="deleteBoard.bo?bno=${b.boardNo }" class="btn btn-sm btn-danger">삭제하기</a>
+            </c:if>
+        </div>
+
         <br>
 
         <table align="center" border="1">

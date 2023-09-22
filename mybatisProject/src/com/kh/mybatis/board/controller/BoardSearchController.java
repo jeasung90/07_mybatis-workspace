@@ -57,6 +57,12 @@ public class BoardSearchController extends HttpServlet {
 		request.setAttribute("pi", pi);
 		request.setAttribute("list", list);
 		
+		System.out.println("검색 들어옴 : " +condition+","+keyword);
+		
+		request.setAttribute("condition", condition);
+		request.setAttribute("keyword", keyword);
+		
+		
 		request.getRequestDispatcher("WEB-INF/views/board/boardListView.jsp").forward(request, response);
 		
 		

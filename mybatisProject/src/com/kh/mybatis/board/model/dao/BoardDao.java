@@ -92,4 +92,11 @@ public class BoardDao {
 		return list;
 	}
 
+	public int deleteBoard(SqlSession sqlSession, int boardNo) {
+
+		int result = sqlSession.update("boardMapper.deleteBoard", boardNo);
+		
+		return result;
+	}
+
 }
